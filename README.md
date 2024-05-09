@@ -1,6 +1,6 @@
 # movie-quote
 
-a api made with django rest framework serve movie and series quotes. you can find the api [Here].
+a api made with django rest framework serve movie and series quotes. 
 
 ## Run locally
 
