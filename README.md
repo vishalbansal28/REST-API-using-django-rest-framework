@@ -1,10 +1,9 @@
 # Movie Quote API
 
-<<<<<<< HEAD
+
 This project is a Movie Quote API built using Django REST Framework. It provides quotes from various movies and TV series, allowing users to filter content based on family-friendly criteria.
 =======
-a api made with django rest framework serve movie and series quotes. 
->>>>>>> 1130c12fe86e041021dcae0dad847630b0d5b33e
+
 
 ## Features
 
