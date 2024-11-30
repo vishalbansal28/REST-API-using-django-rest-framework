@@ -3,46 +3,40 @@ import random
 import string
 from django.utils.text import slugify
 
-
 def random_key():
-	all_digits = list(string.digits)
-	random_key = ""
-	return random_key.join(random.sample(all_digits, 10))
-
+    all_digits = list(string.digits)
+    random_key = ""
+    return random_key.join(random.sample(all_digits, 10))
 
 class Show(models.Model):
-	name = models.CharField(max_length=100, unique=True)
-	slug = models.SlugField(max_length=100)
+    name = models.CharField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=255)
 
-	def save(self, *args, **kwargs):
-		self.slug = slugify(self.name)
-		super(Show, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Show, self).save(*args, **kwargs)
 
-	def __str__(self):
-		return self.name
-
+    def __str__(self):
+        return self.name
 
 class Role(models.Model):
-	name = models.CharField(max_length=100, unique=True)
-	slug = models.SlugField(max_length=100)
+    name = models.CharField(max_length=255, unique=True)
+    show = models.ForeignKey(Show, on_delete=models.CASCADE, default=1)  # Defaulting to the show with primary key = 1
+    slug = models.SlugField(max_length=255)
 
-	def save(self, *args, **kwargs):
-		self.slug = slugify(self.name)
-		super(Role, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Role, self).save(*args, **kwargs)
 
-	def __str__(self):
-		return self.name
-
+    def __str__(self):
+        return self.name
 
 class Quote(models.Model):
-	key = models.CharField(default=random_key, max_length=10, unique=True)
-	quote = models.CharField(max_length=500, unique=True)
-	show = models.ForeignKey(
-		Show, on_delete=models.DO_NOTHING, related_name="show")
-	role = models.ForeignKey(
-		Role, on_delete=models.DO_NOTHING, related_name="role")
-	contain_adult_lang = models.BooleanField(
-		verbose_name="Contain adult language", default=False)
+    key = models.CharField(default=random_key, max_length=10, unique=True)
+    quote = models.CharField(max_length=500, unique=True)
+    show = models.ForeignKey(Show, on_delete=models.DO_NOTHING, related_name="show")
+    role = models.ForeignKey(Role, on_delete=models.DO_NOTHING, related_name="role")
+    contain_adult_lang = models.BooleanField(verbose_name="Contain adult language", default=False)
 
-	def __str__(self):
-		return str(self.key)
+    def __str__(self):
+        return str(self.key)

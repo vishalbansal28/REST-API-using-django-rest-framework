@@ -1,23 +1,57 @@
-# python virtual environment
+# Python virtual environment
 venv/
-# python __pycache__ directories
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+
+# Django specific
 api/__pycache__/
 auth/__pycache__/
 config/__pycache__/
 statistic/__pycache__/
-# test databases
 *.sqlite3
-# test configs
 config/config.py
-# django test dumpdata's
+
+# Backup and log files
 Backups/
-test-*
-# saved git diff in file
-diff*
-# vscode editor
-movie-quote.code-workspace
-.vscode/
-# env variables
-local-env.cmd
-# log files
+logs/
+*.log
 log*
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE and editor settings
+.vscode/
+movie-quote.code-workspace
+*.code-workspace
+
+# Environment variables
+.env
+local-env.cmd
+
+# Git
+*.diff
+diff*
+*.patch
+
+# Temporary files
+*.tmp
+*.bak
+
+# Node modules (if applicable)
+node_modules/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
+
+# Distribution / packaging
+.Python
+dist/
+build/
+*.egg-info/

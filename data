@@ -1,0 +1,49 @@
+from api.models import Show, Role, Quote
+
+# Add Shows
+breaking_bad = Show.objects.create(name='Breaking Bad')
+game_of_thrones = Show.objects.create(name='Game of Thrones')
+friends = Show.objects.create(name='Friends')
+
+# Add Roles
+walter_white = Role.objects.create(name='Walter White')
+jon_snow = Role.objects.create(name='Jon Snow')
+rachel_green = Role.objects.create(name='Rachel Green')
+
+# Add Quotes
+Quote.objects.create(
+    key='1234567890',
+    quote='I am the one who knocks!',
+    show=breaking_bad,
+    role=walter_white,
+    contain_adult_lang=False
+)
+
+Quote.objects.create(
+    key='1234567891',
+    quote='Winter is coming.',
+    show=game_of_thrones,
+    role=jon_snow,
+    contain_adult_lang=False
+)
+
+Quote.objects.create(
+    key='1234567892',
+    quote='We were on a break!',
+    show=friends,
+    role=rachel_green,
+    contain_adult_lang=False
+)
+
+# Verify Data
+shows = Show.objects.all()
+for show in shows:
+    print(show.name, show.slug)
+
+roles = Role.objects.all()
+for role in roles:
+    print(role.name, role.slug)
+
+quotes = Quote.objects.all()
+for quote in quotes:
+    print(quote.key, quote.quote, quote.show.name, quote.role.name, quote.contain_adult_lang)

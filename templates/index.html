@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Quotes API - Vishal Bansal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #2ecc71;
+            --text-color: #ffffff;
+            --text-secondary: #e0e0e0;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #000000, #4A0E4E);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .header h1 {
+            color: var(--text-color);
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .controls {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .quote-container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            animation: slideUp 0.7s ease-out;
+        }
+
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            color: var(--text-color);
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+            box-shadow: var(--box-shadow);
+        }
+
+        select option {
+            background-color: #4A0E4E;
+            color: #ffffff;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            background: var(--primary-color);
+            cursor: pointer;
+            transition: var(--transition);
+            transform: translateY(0);
+        }
+
+        button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .quote-text {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .quote-info {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quote-container.loading {
+            opacity: 0.7;
+            transform: scale(0.98);
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 0;
+        }
+
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e0e0e0;
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        input:checked + .slider {
+            background-color: var(--success-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Loading animation */
+        .loading-dots:after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .controls, .quote-container {
+                padding: 1.5rem;
+            }
+
+            .quote-text {
+                font-size: 1.3rem;
+            }
+        }
+
+        .tech-workflow {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .tech-workflow h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .workflow-steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .workflow-step {
+            flex: 1 1 calc(33.333% - 1rem);
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            min-width: 200px;
+        }
+
+        .workflow-step:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.2);
+        }
+
+        .workflow-step i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .workflow-step p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .developer-info {
+            text-align: center;
+            margin-top: 2rem;
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .social-links a {
+            color: var(--text-color);
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Movie Quotes API</h1>
+            <p>Discover memorable quotes from your favorite shows and movies</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="show-select">Select Show</label>
+                <select id="show-select">
+                    <option value="">All Shows</option>
+                </select>
+            </div>
+
+            <div class="control-group toggle-container">
+                <label for="adult-content">Family-Friendly Mode</label>
+                <label class="toggle">
+                    <input type="checkbox" id="adult-content">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <button id="get-quote">Get Random Quote</button>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote-text">Click the button above to get a random quote!</div>
+            <div class="quote-info">
+                <span id="show-name"></span>
+                <span id="character-name"></span>
+            </div>
+        </div>
+
+        <div class="tech-workflow">
+            <h2>Technology & API Endpoints</h2>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <i class="fas fa-server"></i>
+                    <h3>Backend</h3>
+                    <p>Django REST Framework</p>
+                    <p>SQLite Database</p>
+                </div>
+                <div class="workflow-step">
+                    <i class="fas fa-code"></i>
+                    <h3>Frontend</h3>
+                    <p>Vanilla JavaScript</p>
+                    <p>HTML5 & CSS3</p>
+                </div>
+                <div class="workflow-step">
+                    <i class="fas fa-random"></i>
+                    <h3>/quote/</h3>
+                    <p>Retrieve a random quote. Use ?censored for family-friendly content.</p>
+                </div>
+                <div class="workflow-step">
+                    <i class="fas fa-list"></i>
+                    <h3>/shows/</h3>
+                    <p>List all available shows.</p>
+                </div>
+                <div class="workflow-step">
+                    <i class="fas fa-film"></i>
+                    <h3>/shows/{show_slug}</h3>
+                    <p>Get a random quote from a specific show.</p>
+                </div>
+                <div class="workflow-step">
+                    <i class="fas fa-user-shield"></i>
+                    <h3>/admin/quotes/</h3>
+                    <p>Admin access to manage quotes.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="developer-info">
+            <h3>Developed by Vishal Bansal</h3>
+            <div class="social-links">
+                <a href="https://github.com/vishalbansal28/REST-API-using-django-rest-framework" target="_blank">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/vishal-bansal-62a727192/" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="mailto:bvansal.vb@gmail.com">
+                    <i class="fas fa-envelope"></i>
+                </a>
+                <a href="tel:+919057291541">
+                    <i class="fas fa-phone"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/v1';
+        const quoteButton = document.getElementById('get-quote');
+        const showSelect = document.getElementById('show-select');
+        const adultContentToggle = document.getElementById('adult-content');
+        const quoteText = document.querySelector('.quote-text');
+        const showName = document.getElementById('show-name');
+        const characterName = document.getElementById('character-name');
+        const quoteContainer = document.querySelector('.quote-container');
+
+        // Fetch available shows
+        async function fetchShows() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/shows/`);
+                const shows = await response.json();
+                shows.forEach(show => {
+                    const option = document.createElement('option');
+                    option.value = show.slug;
+                    option.textContent = show.name;
+                    showSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching shows:', error);
+            }
+        }
+
+        // Fetch a random quote
+        async function fetchQuote() {
+            quoteContainer.classList.add('loading');
+            quoteButton.textContent = 'Loading' + String.fromCharCode(8230);
+            try {
+                let url = `${API_BASE_URL}/quote/`;
+                if (adultContentToggle.checked) {
+                    url += '?censored';
+                }
+                
+                const selectedShow = showSelect.value;
+                if (selectedShow) {
+                    url = `${API_BASE_URL}/shows/${selectedShow}`;
+                }
+
+                const response = await fetch(url);
+                const quote = await response.json();
+
+                // Remove existing fade-in class
+                quoteContainer.classList.remove('fade-in');
+                
+                // Trigger reflow
+                void quoteContainer.offsetWidth;
+                
+                // Add fade-in class
+                quoteContainer.classList.add('fade-in');
+
+                if (quote.status === 'no_quote') {
+                    quoteText.textContent = 'No quotes available for the selected criteria. Try different options!';
+                    showName.textContent = '';
+                    characterName.textContent = '';
+                } else {
+                    quoteText.textContent = `"${quote.quote}"`;
+                    showName.textContent = quote.show;
+                    characterName.textContent = ` - ${quote.role}`;
+                }
+            } catch (error) {
+                console.error('Error fetching quote:', error);
+                quoteText.textContent = 'Failed to fetch quote. Please try again.';
+                showName.textContent = '';
+                characterName.textContent = '';
+            } finally {
+                quoteContainer.classList.remove('loading');
+                quoteButton.textContent = 'Get Random Quote';
+            }
+        }
+
+        // Event listeners
+        quoteButton.addEventListener('click', fetchQuote);
+        showSelect.addEventListener('change', fetchQuote);
+        adultContentToggle.addEventListener('change', fetchQuote);
+
+        // Initialize
+        fetchShows();
+
+        // Detailed explanation of API endpoints
+        const API_ENDPOINTS = {
+            quote: {
+                path: '/v1/quote/',
+                description: 'Retrieve a random quote. Optional ?censored parameter for family-friendly content.',
+                methods: ['GET']
+            },
+            shows: {
+                path: '/v1/shows/',
+                description: 'List all available shows in the database.',
+                methods: ['GET']
+            },
+            showSpecificQuote: {
+                path: '/v1/shows/{show_slug}',
+                description: 'Get a random quote from a specific show.',
+                methods: ['GET']
+            }
+        };
+
+        console.log('API Endpoints:', API_ENDPOINTS);
+    </script>
+</body>
+</html>

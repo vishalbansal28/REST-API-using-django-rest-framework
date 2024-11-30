@@ -10,7 +10,7 @@ schema_view = get_schema_view(
 		title="Movie Quote Api Documentation",
 		default_version='v1',
 		description="auto created documentation by drf_yasg.",
-		contact=openapi.Contact(email="farantgh@gmail.com"),
+		contact=openapi.Contact(email="bvansal.vb@gmail.com"),
 		license=openapi.License(name="BSD License"),
 	),
 	public=True,

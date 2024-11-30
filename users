@@ -1,0 +1,8 @@
+superuser: admin , password: admin12345
+
+
+# User Details
+# Format: role: username, password
+# Example:
+# superuser: admin, adminpass
+# authenticated user: user1, userpass

@@ -5,7 +5,7 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "SECRET_KEY"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = True
 
 
@@ -118,7 +118,7 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
 }
 # change this when you made your user
-MAINSUPERUSER = "faran"
+MAINSUPERUSER = "Vishal"
 
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,

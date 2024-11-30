@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import validate_email
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 
 from .models import Quote, Show, Role
@@ -16,25 +16,11 @@ from statistic.utils import get_client_ip, add_or_create_visit
 
 
 class MainPage(APIView):
-	"""Show developers info instead of 404 at the main page"""
+	"""Show the main frontend page"""
 	permission_classes = (permissions.AllowAny, )
 
 	def get(self, request, format=None):
-		all_shows = list(Show.objects.all().values_list('slug', flat=True))
-		data = {
-			"developer": "Faran Taghavi",
-			"email": "farantgh@gmail.com",
-			"website": request.get_host(),
-			"github": "https://github.com/F4R4N",
-			"showSlugs": all_shows,
-			"paths": [
-				"v1/quote/",
-				"v1/shows/<showSlugs>",
-				"v1/shows/",
-				"v1/quote/?censored",
-			]
-		}
-		return Response(status=status.HTTP_200_OK, data=data)
+		return render(request, 'index.html')
 
 
 class UserQuoteView(APIView):
